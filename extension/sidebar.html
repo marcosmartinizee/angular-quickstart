@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iMacros Library</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f5f5;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .toolbar {
+      background: white;
+      padding: 15px 20px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+    }
+
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #d0d0d0;
+    }
+
+    .btn-success {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #45a049;
+    }
+
+    .btn-danger {
+      background: #ff4444;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #cc0000;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .macro-list-panel {
+      width: 300px;
+      background: white;
+      border-right: 1px solid #e0e0e0;
+      overflow-y: auto;
+    }
+
+    .search-box {
+      padding: 15px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .macro-list {
+      padding: 10px;
+    }
+
+    .macro-item {
+      padding: 12px;
+      margin-bottom: 8px;
+      background: #f9f9f9;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-left: 3px solid transparent;
+    }
+
+    .macro-item:hover {
+      background: #f0f0f0;
+    }
+
+    .macro-item.active {
+      background: #e3f2fd;
+      border-left-color: #2196F3;
+    }
+
+    .macro-item-name {
+      font-weight: 500;
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .macro-item-info {
+      font-size: 11px;
+      color: #999;
+    }
+
+    .editor-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: white;
+    }
+
+    .editor-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .editor-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .editor-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .editor-container {
+      flex: 1;
+      padding: 20px;
+      overflow: auto;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .code-editor {
+      width: 100%;
+      min-height: 400px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      resize: vertical;
+      background: #f9f9f9;
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #999;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .empty-state-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+
+    .empty-state-text {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .empty-state-subtext {
+      font-size: 13px;
+    }
+
+    .status-bar {
+      background: #f5f5f5;
+      padding: 10px 20px;
+      border-top: 1px solid #e0e0e0;
+      font-size: 12px;
+      color: #666;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .help-text {
+      font-size: 12px;
+      color: #999;
+      margin-top: 5px;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      background: #e3f2fd;
+      color: #1976d2;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📚 Macro Library</h1>
+    <p>Manage and edit your automation macros</p>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn btn-primary" id="newMacroBtn">
+      <span>➕</span>
+      <span>New Macro</span>
+    </button>
+    <button class="btn btn-success" id="importBtn">
+      <span>📥</span>
+      <span>Import</span>
+    </button>
+    <button class="btn btn-secondary" id="exportBtn">
+      <span>📤</span>
+      <span>Export</span>
+    </button>
+    <button class="btn btn-secondary" id="samplesBtn">
+      <span>📖</span>
+      <span>Samples</span>
+    </button>
+  </div>
+
+  <div class="content">
+    <div class="macro-list-panel">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Search macros...">
+      </div>
+      <div class="macro-list" id="macroList">
+        <div class="empty-state">
+          <div class="empty-state-icon">📝</div>
+          <div class="empty-state-text">No macros yet</div>
+          <div class="empty-state-subtext">Create or import a macro to get started</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="editor-panel">
+      <div id="editorView" style="display: none;">
+        <div class="editor-header">
+          <div class="editor-title" id="editorTitle">New Macro</div>
+          <div class="editor-actions">
+            <button class="btn btn-success" id="saveBtn">💾 Save</button>
+            <button class="btn btn-primary" id="playBtn">▶ Play</button>
+            <button class="btn btn-danger" id="deleteBtn">🗑️ Delete</button>
+          </div>
+        </div>
+        <div class="editor-container">
+          <div class="form-group">
+            <label class="form-label">Macro Name</label>
+            <input type="text" class="form-input" id="macroName" placeholder="Enter macro name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Macro Code</label>
+            <div class="help-text">Use iMacros syntax. Common commands: URL, TAG, WAIT, SET, EXTRACT</div>
+            <textarea class="code-editor" id="macroCode" placeholder="VERSION BUILD=1.0.0 RECORDER=CR
+TAB T=1
+URL GOTO=https://example.com
+TAG POS=1 TYPE=INPUT:TEXT ATTR=ID:username CONTENT=myuser
+TAG POS=1 TYPE=INPUT:PASSWORD ATTR=ID:password CONTENT=mypass
+TAG POS=1 TYPE=BUTTON:SUBMIT ATTR=TXT:Login CONTENT=EVENT:CLICK"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Quick Reference</label>
+            <div class="tag-list">
+              <div class="tag">URL GOTO=url</div>
+              <div class="tag">TAG POS=1 TYPE=... ATTR=... CONTENT=...</div>
+              <div class="tag">WAIT SECONDS=2</div>
+              <div class="tag">SET !VAR value</div>
+              <div class="tag">EXTRACT TXT</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="emptyView" class="empty-state">
+        <div class="empty-state-icon">⚡</div>
+        <div class="empty-state-text">Select a macro to edit</div>
+        <div class="empty-state-subtext">or create a new one to get started</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <div id="statusText">Ready</div>
+    <div id="macroCount">0 macros</div>
+  </div>
+
+  <input type="file" id="fileInput" accept=".iim,.txt" style="display: none;">
+
+  <script src="sidebar.js"></script>
+</body>
+</html>
