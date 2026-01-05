@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Auto Clicker</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📧 Email Auto Clicker</h1>
+      <p class="subtitle">Análisis automático de correos y headers</p>
+    </header>
+
+    <section class="status-section">
+      <div class="status-card">
+        <div class="status-label">Estado:</div>
+        <div class="status-value" id="status">Inactivo</div>
+      </div>
+      <div class="status-card">
+        <div class="status-label">Proveedor:</div>
+        <div class="status-value" id="provider">Detectando...</div>
+      </div>
+      <div class="status-card">
+        <div class="status-label">Correos encontrados:</div>
+        <div class="status-value" id="emailCount">0</div>
+      </div>
+      <div class="status-card">
+        <div class="status-label">Procesados:</div>
+        <div class="status-value" id="processedCount">0</div>
+      </div>
+    </section>
+
+    <section class="controls-section">
+      <div class="control-group">
+        <label for="delayInput">Retraso entre clics (ms):</label>
+        <input type="number" id="delayInput" value="2000" min="500" max="10000" step="500">
+      </div>
+
+      <div class="button-group">
+        <button id="startBtn" class="btn btn-primary">
+          ▶️ Iniciar Auto-Click
+        </button>
+        <button id="stopBtn" class="btn btn-danger" disabled>
+          ⏹️ Detener
+        </button>
+        <button id="refreshBtn" class="btn btn-secondary">
+          🔄 Actualizar
+        </button>
+      </div>
+    </section>
+
+    <section class="results-section">
+      <div class="section-header">
+        <h2>📊 Resultados</h2>
+        <button id="clearBtn" class="btn btn-small">Limpiar</button>
+        <button id="exportBtn" class="btn btn-small">Exportar JSON</button>
+      </div>
+      <div id="results" class="results-container">
+        <p class="empty-state">No hay resultados aún. Inicia el auto-click para comenzar.</p>
+      </div>
+    </section>
+
+    <section class="headers-section">
+      <div class="section-header">
+        <h2>🔍 Headers del Correo Actual</h2>
+        <button id="extractHeadersBtn" class="btn btn-small">Extraer Headers</button>
+        <button id="copyHeadersBtn" class="btn btn-small">Copiar</button>
+      </div>
+      <div id="headers" class="headers-container">
+        <p class="empty-state">Abre un correo y haz clic en "Extraer Headers"</p>
+      </div>
+    </section>
+
+    <footer>
+      <p>Compatible con Gmail, Outlook y Yahoo Mail</p>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

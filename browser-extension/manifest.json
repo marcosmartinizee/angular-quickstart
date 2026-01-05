@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "name": "Email Auto Clicker & Header Analyzer",
+  "version": "1.0.0",
+  "description": "Extensión para hacer clic automático en correos electrónicos, abrirlos y generar análisis de headers",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "tabs",
+    "webRequest"
+  ],
+  "host_permissions": [
+    "https://mail.google.com/*",
+    "https://outlook.live.com/*",
+    "https://outlook.office.com/*",
+    "https://*.mail.yahoo.com/*",
+    "*://*/*"
+  ],
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://mail.google.com/*",
+        "https://outlook.live.com/*",
+        "https://outlook.office.com/*",
+        "https://*.mail.yahoo.com/*"
+      ],
+      "js": ["scripts/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "email-auto-clicker@extension.com",
+      "strict_min_version": "109.0"
+    }
+  }
+}
