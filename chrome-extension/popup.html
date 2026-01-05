@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MacroMaster</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 350px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+    }
+
+    .header {
+      background: white;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 3px solid #667eea;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      color: #667eea;
+      margin-bottom: 5px;
+    }
+
+    .header p {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .status {
+      background: white;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .status-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ccc;
+    }
+
+    .indicator.active {
+      background: #4ecdc4;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .controls {
+      background: white;
+      padding: 15px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-record {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .btn-record:hover {
+      background: #ff5252;
+    }
+
+    .btn-stop {
+      background: #95a5a6;
+      color: white;
+    }
+
+    .btn-stop:hover {
+      background: #7f8c8d;
+    }
+
+    .btn-play {
+      background: #4ecdc4;
+      color: white;
+    }
+
+    .btn-play:hover {
+      background: #45b8b0;
+    }
+
+    .btn-sidebar {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-sidebar:hover {
+      background: #5568d3;
+    }
+
+    .quick-actions {
+      background: white;
+      padding: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .quick-actions h3 {
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: #666;
+    }
+
+    .action-btn {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 8px;
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+
+    .action-btn:hover {
+      background: #e9ecef;
+      border-color: #adb5bd;
+    }
+
+    .footer {
+      background: white;
+      padding: 12px;
+      text-align: center;
+      border-top: 1px solid #eee;
+    }
+
+    .footer a {
+      color: #667eea;
+      text-decoration: none;
+      font-size: 12px;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>MacroMaster</h1>
+    <p>Web Automation & Recording</p>
+  </div>
+
+  <div class="status">
+    <div class="status-item">
+      <div class="indicator" id="recordIndicator"></div>
+      <span id="recordStatus">Ready to record</span>
+    </div>
+    <div class="status-item">
+      <div class="indicator" id="playIndicator"></div>
+      <span id="playStatus">No macro playing</span>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn btn-record" id="recordBtn">
+        <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+          <circle cx="10" cy="10" r="6"/>
+        </svg>
+        Record
+      </button>
+      <button class="btn btn-stop" id="stopBtn" disabled>
+        <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+          <rect x="6" y="6" width="8" height="8"/>
+        </svg>
+        Stop
+      </button>
+    </div>
+    <button class="btn btn-sidebar" id="sidebarBtn">
+      <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 1v10h3V5H5zm5 0v10h5V5h-5z"/>
+      </svg>
+      Open Sidebar
+    </button>
+  </div>
+
+  <div class="quick-actions">
+    <h3>Quick Actions</h3>
+    <button class="action-btn" id="viewMacrosBtn">View All Macros</button>
+    <button class="action-btn" id="settingsBtn">Settings</button>
+    <button class="action-btn" id="helpBtn">Help & Documentation</button>
+  </div>
+
+  <div class="footer">
+    <a href="#" id="aboutLink">About MacroMaster v1.0.0</a>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MacroMaster - Control Panel</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f7fa;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .header h1 {
+      font-size: 22px;
+      margin-bottom: 5px;
+    }
+
+    .header p {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .toolbar {
+      background: white;
+      padding: 15px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .btn-primary {
+      background: #4ecdc4;
+      color: white;
+    }
+
+    .btn-danger {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #95a5a6;
+      color: white;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .content {
+      flex: 1;
+      overflow: auto;
+      padding: 20px;
+    }
+
+    .section {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .section h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .macro-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .macro-item {
+      padding: 15px;
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .macro-item:hover {
+      background: #e9ecef;
+      border-color: #667eea;
+      transform: translateX(5px);
+    }
+
+    .macro-info h3 {
+      font-size: 15px;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    .macro-info p {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .macro-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      background: white;
+      border: 1px solid #dee2e6;
+    }
+
+    .icon-btn:hover {
+      background: #f8f9fa;
+      transform: scale(1.1);
+    }
+
+    .icon-btn.play {
+      color: #4ecdc4;
+    }
+
+    .icon-btn.edit {
+      color: #667eea;
+    }
+
+    .icon-btn.delete {
+      color: #ff6b6b;
+    }
+
+    .editor {
+      display: none;
+    }
+
+    .editor.active {
+      display: block;
+    }
+
+    .editor textarea {
+      width: 100%;
+      height: 300px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      resize: vertical;
+      margin-bottom: 10px;
+    }
+
+    .editor-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+    }
+
+    .empty-state svg {
+      width: 64px;
+      height: 64px;
+      opacity: 0.3;
+      margin-bottom: 15px;
+    }
+
+    .recording-indicator {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 15px;
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .recording-indicator.active {
+      display: flex;
+    }
+
+    .pulse-dot {
+      width: 12px;
+      height: 12px;
+      background: #ff6b6b;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+      font-size: 20px;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #999;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>MacroMaster Control Panel</h1>
+    <p>Record, edit, and manage your automation macros</p>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn btn-danger" id="recordBtn">
+      <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+        <circle cx="10" cy="10" r="6"/>
+      </svg>
+      Record New
+    </button>
+    <button class="btn btn-primary" id="createBtn">
+      <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"/>
+      </svg>
+      Create New
+    </button>
+    <button class="btn btn-secondary" id="importBtn">
+      <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+      </svg>
+      Import
+    </button>
+    <button class="btn btn-secondary" id="stopBtn" disabled>
+      <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+        <rect x="6" y="6" width="8" height="8"/>
+      </svg>
+      Stop
+    </button>
+  </div>
+
+  <div class="content">
+    <div class="recording-indicator" id="recordingIndicator">
+      <div class="pulse-dot"></div>
+      <strong>Recording in progress...</strong>
+      <span>Click elements on the page to record actions</span>
+    </div>
+
+    <div class="section">
+      <h2>
+        <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
+        </svg>
+        Your Macros
+      </h2>
+      <input type="text" class="search-box" id="searchBox" placeholder="Search macros...">
+      <div class="macro-list" id="macroList">
+        <div class="empty-state">
+          <svg fill="currentColor" viewBox="0 0 20 20">
+            <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"/>
+            <path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"/>
+          </svg>
+          <p>No macros yet. Start by recording or creating one!</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section editor" id="editorSection">
+      <h2>Macro Editor</h2>
+      <div class="form-group">
+        <label>Macro Name</label>
+        <input type="text" id="macroName" placeholder="Enter macro name">
+      </div>
+      <div class="form-group">
+        <label>Macro Content</label>
+        <textarea id="macroContent" placeholder="Enter macro commands..."></textarea>
+      </div>
+      <div class="editor-actions">
+        <button class="btn btn-primary" id="saveBtn">Save Macro</button>
+        <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+        <button class="btn btn-primary" id="testBtn">Test Run</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create/Edit Modal -->
+  <div class="modal" id="macroModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Create New Macro</h2>
+        <button class="close-btn" id="closeModal">&times;</button>
+      </div>
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" id="modalMacroName" placeholder="My Macro">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <input type="text" id="modalDescription" placeholder="What does this macro do?">
+      </div>
+      <div class="form-group">
+        <label>Commands</label>
+        <textarea id="modalContent" rows="10" placeholder="VERSION BUILD=1.0.0&#10;URL GOTO=https://example.com&#10;TAG ID:element"></textarea>
+      </div>
+      <div class="editor-actions">
+        <button class="btn btn-primary" id="modalSaveBtn">Save</button>
+        <button class="btn btn-secondary" id="modalCancelBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="sidebar.js"></script>
+</body>
+</html>

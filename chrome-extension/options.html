@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MacroMaster - Settings</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f7fa;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .header h1 {
+      font-size: 32px;
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .section {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .section h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .setting-group {
+      margin-bottom: 25px;
+    }
+
+    .setting-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .setting-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .setting-label label {
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .setting-description {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 26px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 26px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #4ecdc4;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(24px);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #4ecdc4;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #45b8b0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+    }
+
+    .btn-secondary {
+      background: #95a5a6;
+      color: white;
+      margin-left: 10px;
+    }
+
+    .btn-secondary:hover {
+      background: #7f8c8d;
+    }
+
+    .btn-danger {
+      background: #ff6b6b;
+      color: white;
+      margin-left: 10px;
+    }
+
+    .btn-danger:hover {
+      background: #ff5252;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 30px;
+    }
+
+    .info-box {
+      background: #e3f2fd;
+      border-left: 4px solid #2196f3;
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 15px;
+      font-size: 13px;
+      color: #1565c0;
+    }
+
+    .success-message {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #4ecdc4;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      display: none;
+      animation: slideIn 0.3s;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .shortcut-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .shortcut-input {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>MacroMaster Settings</h1>
+      <p>Configure your automation preferences and behavior</p>
+    </div>
+
+    <div class="section">
+      <h2>
+        <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+        </svg>
+        Playback Settings
+      </h2>
+
+      <div class="setting-group">
+        <div class="setting-label">
+          <label for="timeout">Default Timeout (seconds)</label>
+        </div>
+        <div class="setting-description">
+          Maximum time to wait for elements before timing out
+        </div>
+        <input type="number" id="timeout" min="1" max="300" value="60">
+      </div>
+
+      <div class="setting-group">
+        <div class="setting-label">
+          <label for="replaySpeed">Replay Speed</label>
+        </div>
+        <div class="setting-description">
+          Control macro playback speed (1.0 = normal, 0.5 = slower, 2.0 = faster)
+        </div>
+        <input type="number" id="replaySpeed" min="0.1" max="5" step="0.1" value="1.0">
+      </div>
+
+      <div class="setting-group">
+        <div class="setting-label">
+          <label for="errorHandling">Error Handling</label>
+        </div>
+        <div class="setting-description">
+          What to do when an error occurs during playback
+        </div>
+        <select id="errorHandling">
+          <option value="stop">Stop immediately</option>
+          <option value="continue">Continue and log error</option>
+          <option value="prompt">Prompt for action</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <div class="setting-label">
+          <label>Highlight Elements</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="highlightElements" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-description">
+          Highlight elements on the page during recording and playback
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <div class="setting-label">
+          <label>Show Tooltips</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="showTooltips" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-description">
+          Display helpful tooltips during macro execution
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>
+        <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zm12.553 1.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
+        </svg>
+        Recording Settings
+      </h2>
+
+      <div class="setting-group">
+        <div class="setting-label">
+          <label>Auto-save Recordings</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="autoSaveRecordings">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-description">
+          Automatically save recordings when stopped
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <div class="setting-label">
+          <label>Record Mouse Hover</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="recordMouseHover">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-description">
+          Include mouse hover events in recordings
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <div class="setting-label">
+          <label>Smart Selectors</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="smartSelectors" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-description">
+          Use intelligent selector generation for better reliability
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>
+        <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+        </svg>
+        Advanced Settings
+      </h2>
+
+      <div class="setting-group">
+        <div class="setting-label">
+          <label for="logLevel">Log Level</label>
+        </div>
+        <div class="setting-description">
+          Console logging verbosity
+        </div>
+        <select id="logLevel">
+          <option value="error">Error</option>
+          <option value="warn">Warning</option>
+          <option value="info" selected>Info</option>
+          <option value="debug">Debug</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <div class="setting-label">
+          <label for="maxRetries">Max Retries</label>
+        </div>
+        <div class="setting-description">
+          Number of times to retry failed operations
+        </div>
+        <input type="number" id="maxRetries" min="0" max="10" value="3">
+      </div>
+
+      <div class="setting-group">
+        <div class="setting-label">
+          <label>Enable Debug Mode</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="debugMode">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-description">
+          Show detailed debug information in console
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>Note:</strong> Debug mode may impact performance. Only enable when troubleshooting issues.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>
+        <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd"/>
+        </svg>
+        Data Management
+      </h2>
+
+      <div class="setting-group">
+        <button class="btn btn-secondary" id="exportAllBtn">Export All Macros</button>
+        <button class="btn btn-secondary" id="importAllBtn">Import Macros</button>
+        <button class="btn btn-danger" id="clearAllBtn">Clear All Data</button>
+      </div>
+
+      <div class="info-box">
+        <strong>Warning:</strong> Clearing all data will permanently delete all your saved macros and settings. This action cannot be undone.
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="saveBtn">Save Settings</button>
+      <button class="btn btn-secondary" id="resetBtn">Reset to Defaults</button>
+    </div>
+  </div>
+
+  <div class="success-message" id="successMessage">
+    Settings saved successfully!
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
