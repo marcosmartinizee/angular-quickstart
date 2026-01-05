@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Clicker & Header Extractor</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Email Clicker</h1>
+      <p class="subtitle">Click, Open & Extract Email Headers</p>
+    </header>
+
+    <div class="controls">
+      <button id="startBtn" class="btn btn-primary">Start Auto-Processing</button>
+      <button id="stopBtn" class="btn btn-secondary" disabled>Stop Processing</button>
+      <button id="clickOneBtn" class="btn btn-info">Click Single Email</button>
+      <button id="extractBtn" class="btn btn-info">Extract Current Email</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat-item">
+        <span class="stat-label">Emails Processed:</span>
+        <span id="emailCount" class="stat-value">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Last Updated:</span>
+        <span id="lastUpdate" class="stat-value">Never</span>
+      </div>
+    </div>
+
+    <div class="results-section">
+      <div class="section-header">
+        <h2>Results</h2>
+        <div class="header-actions">
+          <button id="refreshBtn" class="btn-icon" title="Refresh">🔄</button>
+          <button id="exportBtn" class="btn-icon" title="Export">💾</button>
+          <button id="clearBtn" class="btn-icon" title="Clear">🗑️</button>
+        </div>
+      </div>
+
+      <div id="resultsContainer" class="results-container">
+        <p class="empty-message">No emails processed yet. Click "Start Auto-Processing" or visit your email inbox.</p>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <label for="filterProvider">Filter by Provider:</label>
+      <select id="filterProvider">
+        <option value="all">All Providers</option>
+        <option value="gmail">Gmail</option>
+        <option value="outlook">Outlook</option>
+        <option value="yahoo">Yahoo</option>
+      </select>
+    </div>
+
+    <footer>
+      <p class="footer-text">Compatible with Chrome & Firefox latest versions</p>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
