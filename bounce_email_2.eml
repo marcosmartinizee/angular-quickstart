@@ -1,0 +1,29 @@
+Return-Path: <mailer-daemon@example.com>
+Received: by mail.example.com id abc123; Mon, 05 Jan 2026 20:19:06 GMT
+Date: Mon, 05 Jan 2026 20:19:06 GMT
+From: Mail Delivery System <mailer-daemon@example.com>
+To: sender@example.com
+Subject: Delivery Status Notification (Failure) - User Unknown
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="boundary123"
+
+--boundary123
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+
+        <html>
+        <body>
+          <h2>Delivery Status Notification</h2>
+          <p>Your message could not be delivered to <strong>user2@example.com</strong> because the address is not recognized.</p>
+          <p>Please check the recipient's email address and try again.</p>
+          <hr>
+          <p><strong>Original Message Details:</strong></p>
+          <p>From: sender@example.com</p>
+          <p>To: user2@example.com</p>
+          <p>Subject: Test Message</p>
+        </body>
+        </html>
+      
+
+--boundary123--
