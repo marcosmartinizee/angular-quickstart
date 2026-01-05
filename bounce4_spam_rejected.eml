@@ -1,0 +1,154 @@
+From: Postmaster <postmaster@securemail.org>
+To: sender@yourdomain.com
+Subject: Message Rejected - Spam Policy Violation
+Date: Mon, 5 Jan 2026 14:20:35 +0000
+Message-ID: <20260105142035.xyz123@securemail.org>
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status; boundary="boundary321"
+
+--boundary321
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Rejected</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
+        .container { max-width: 680px; margin: 0 auto; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
+        .header-warning { background: linear-gradient(135deg, #ff9800 0%, #f44336 100%); padding: 35px; text-align: center; color: white; }
+        .header-warning h1 { font-size: 30px; margin: 0 0 10px 0; font-weight: 700; }
+        .header-warning .icon { font-size: 60px; margin-bottom: 15px; }
+        .content-area { padding: 40px 35px; }
+        .alert-critical { background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); border-left: 6px solid #f44336; padding: 25px; border-radius: 8px; margin: 25px 0; }
+        .alert-critical h2 { color: #c62828; margin: 0 0 15px 0; font-size: 22px; }
+        .alert-critical p { color: #b71c1c; margin: 8px 0; line-height: 1.7; }
+        .details-grid { display: grid; grid-template-columns: 1fr; gap: 12px; background: #fafafa; padding: 20px; border-radius: 8px; margin: 25px 0; }
+        .detail-row { display: flex; padding: 10px 0; border-bottom: 1px solid #e0e0e0; }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label { font-weight: 600; color: #424242; min-width: 180px; }
+        .detail-value { color: #616161; flex: 1; word-break: break-all; }
+        .spam-score { background: #fff3e0; border: 2px solid #ff9800; padding: 20px; border-radius: 8px; margin: 25px 0; }
+        .spam-score h3 { color: #e65100; margin-top: 0; }
+        .score-bar { background: #e0e0e0; height: 30px; border-radius: 15px; overflow: hidden; margin: 15px 0; position: relative; }
+        .score-fill { background: linear-gradient(90deg, #ff9800 0%, #f44336 100%); height: 100%; width: 85%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+        .recommendations { background: #e8f5e9; padding: 25px; border-radius: 8px; margin: 25px 0; border-left: 6px solid #4caf50; }
+        .recommendations h3 { color: #2e7d32; margin-top: 0; }
+        .recommendations ul { margin: 15px 0; padding-left: 20px; }
+        .recommendations li { color: #1b5e20; margin: 10px 0; line-height: 1.7; }
+        .footer-info { background: #263238; color: #90a4ae; padding: 30px; text-align: center; font-size: 13px; line-height: 1.9; }
+        .footer-info strong { color: #cfd8dc; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-warning">
+            <div class="icon">🛡️</div>
+            <h1>Message Rejected by Security Filter</h1>
+            <p style="font-size: 16px; margin: 0;">Your email was blocked due to spam policy violations</p>
+        </div>
+        
+        <div class="content-area">
+            <div class="alert-critical">
+                <h2>⛔ Delivery Failed - Spam Detection</h2>
+                <p><strong>Your message has been rejected by the recipient's mail server security system.</strong></p>
+                <p>The content of your email triggered multiple spam filters and was classified as potentially unwanted or malicious.</p>
+            </div>
+            
+            <h3 style="color: #212121; margin-top: 30px;">Delivery Information</h3>
+            <div class="details-grid">
+                <div class="detail-row">
+                    <span class="detail-label">📧 Recipient:</span>
+                    <span class="detail-value">admin@protected-company.com</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">🚫 Rejection Code:</span>
+                    <span class="detail-value">554 5.7.1</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">📋 Reason:</span>
+                    <span class="detail-value">Message rejected due to spam content</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">🔒 Security System:</span>
+                    <span class="detail-value">SpamAssassin + Custom Filters</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">⏰ Rejected At:</span>
+                    <span class="detail-value">Mon, 5 Jan 2026 14:20:35 +0000</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">🆔 Message ID:</span>
+                    <span class="detail-value">&lt;promo-blast-2026@yourdomain.com&gt;</span>
+                </div>
+            </div>
+            
+            <div class="spam-score">
+                <h3>📊 Spam Score Analysis</h3>
+                <p><strong>Your message scored 8.5 out of 10</strong> (Threshold: 5.0)</p>
+                <div class="score-bar">
+                    <div class="score-fill">85% - HIGH RISK</div>
+                </div>
+                <p style="color: #e65100; margin-top: 15px;"><strong>Detected Issues:</strong></p>
+                <ul style="color: #bf360c; margin: 10px 0; padding-left: 20px;">
+                    <li>Excessive use of promotional language</li>
+                    <li>Multiple suspicious links detected</li>
+                    <li>Missing or invalid SPF/DKIM authentication</li>
+                    <li>Subject line contains spam trigger words</li>
+                    <li>High image-to-text ratio</li>
+                </ul>
+            </div>
+            
+            <div class="recommendations">
+                <h3>✅ How to Improve Email Deliverability</h3>
+                <ul>
+                    <li><strong>Authenticate your domain:</strong> Set up SPF, DKIM, and DMARC records properly</li>
+                    <li><strong>Avoid spam trigger words:</strong> Remove phrases like "FREE", "ACT NOW", "LIMITED TIME"</li>
+                    <li><strong>Balance content:</strong> Maintain a healthy text-to-image ratio</li>
+                    <li><strong>Use legitimate links:</strong> Avoid URL shorteners and suspicious domains</li>
+                    <li><strong>Build sender reputation:</strong> Warm up your IP address gradually</li>
+                    <li><strong>Provide unsubscribe option:</strong> Include a clear opt-out mechanism</li>
+                    <li><strong>Verify recipient consent:</strong> Only send to opted-in subscribers</li>
+                </ul>
+            </div>
+            
+            <div style="background: #fff9c4; padding: 20px; border-radius: 8px; border-left: 6px solid #fbc02d; margin-top: 25px;">
+                <p style="color: #f57f17; margin: 0; line-height: 1.7;">
+                    <strong>⚠️ Important:</strong> Repeated spam violations may result in your domain or IP address being blacklisted. 
+                    Please review your email practices and ensure compliance with anti-spam regulations (CAN-SPAM, GDPR).
+                </p>
+            </div>
+            
+            <div style="margin-top: 30px; padding-top: 25px; border-top: 2px solid #e0e0e0;">
+                <p style="color: #757575; font-size: 14px;"><strong>Original Message Details:</strong></p>
+                <p style="color: #757575; font-size: 14px;">Subject: 🎉 AMAZING OFFER - ACT NOW! Limited Time Only!!!</p>
+                <p style="color: #757575; font-size: 14px;">From: sender@yourdomain.com</p>
+                <p style="color: #757575; font-size: 14px;">Size: 245 KB</p>
+            </div>
+        </div>
+        
+        <div class="footer-info">
+            <p><strong>SecureMail Security System</strong></p>
+            <p>securemail.org | Automated Security Notification</p>
+            <p>This message was generated automatically by the mail security system.</p>
+            <p>For assistance, contact: security@securemail.org</p>
+        </div>
+    </div>
+</body>
+</html>
+
+--boundary321
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; securemail.org
+Arrival-Date: Mon, 5 Jan 2026 14:18:20 +0000
+
+Final-Recipient: rfc822; admin@protected-company.com
+Action: failed
+Status: 5.7.1
+Diagnostic-Code: smtp; 554 5.7.1 Message rejected due to spam content (score: 8.5/10)
+
+--boundary321--

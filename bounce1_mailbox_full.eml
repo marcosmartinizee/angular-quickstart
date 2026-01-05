@@ -1,0 +1,77 @@
+From: Mail Delivery System <mailer-daemon@mail.example.com>
+To: sender@yourdomain.com
+Subject: Mail delivery failed: returning message to sender
+Date: Mon, 5 Jan 2026 10:30:45 +0000
+Message-ID: <20260105103045.12345@mail.example.com>
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status; boundary="boundary123"
+
+--boundary123
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mail Delivery Failed</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { background-color: #d32f2f; color: white; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .error-icon { font-size: 48px; text-align: center; margin: 20px 0; }
+        .message { color: #333; line-height: 1.6; }
+        .details { background-color: #f9f9f9; padding: 15px; border-left: 4px solid #d32f2f; margin: 20px 0; }
+        .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚠️ Mail Delivery Failed</h1>
+        </div>
+        
+        <div class="error-icon">❌</div>
+        
+        <div class="message">
+            <p><strong>Your message could not be delivered to the following recipient(s):</strong></p>
+            
+            <div class="details">
+                <p><strong>Recipient:</strong> user@recipient-domain.com</p>
+                <p><strong>Error Code:</strong> 552</p>
+                <p><strong>Reason:</strong> Mailbox full - The recipient's mailbox is full and cannot accept new messages.</p>
+                <p><strong>Action Required:</strong> Please contact the recipient through alternative means or try again later.</p>
+            </div>
+            
+            <p><strong>Original Message Details:</strong></p>
+            <ul>
+                <li><strong>Subject:</strong> Important Update - Please Review</li>
+                <li><strong>Sent:</strong> Mon, 5 Jan 2026 10:25:30 +0000</li>
+                <li><strong>Message-ID:</strong> &lt;msg123456@yourdomain.com&gt;</li>
+            </ul>
+            
+            <p>This is an automatically generated Delivery Status Notification. Please do not reply to this message.</p>
+        </div>
+        
+        <div class="footer">
+            <p>Mail Delivery System | mail.example.com</p>
+            <p>If you believe this is an error, please contact your system administrator.</p>
+        </div>
+    </div>
+</body>
+</html>
+
+--boundary123
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; mail.example.com
+Arrival-Date: Mon, 5 Jan 2026 10:25:30 +0000
+
+Final-Recipient: rfc822; user@recipient-domain.com
+Action: failed
+Status: 5.2.2
+Diagnostic-Code: smtp; 552 Mailbox full
+
+--boundary123--

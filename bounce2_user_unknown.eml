@@ -1,0 +1,92 @@
+From: Mail Delivery Subsystem <postmaster@mailserver.net>
+To: sender@yourdomain.com
+Subject: Undelivered Mail Returned to Sender
+Date: Mon, 5 Jan 2026 11:15:22 +0000
+Message-ID: <20260105111522.67890@mailserver.net>
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status; boundary="boundary456"
+
+--boundary456
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Failure Notice</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; }
+        .container { max-width: 650px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        .header { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 30px; text-align: center; }
+        .header h1 { margin: 0; font-size: 28px; font-weight: 600; }
+        .content { padding: 30px; }
+        .alert-box { background-color: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 20px; margin: 20px 0; }
+        .alert-box h2 { color: #856404; margin-top: 0; font-size: 20px; }
+        .recipient-info { background-color: #f8f9fa; padding: 15px; border-radius: 6px; margin: 15px 0; }
+        .code { font-family: 'Courier New', monospace; background-color: #e9ecef; padding: 3px 8px; border-radius: 3px; color: #c7254e; }
+        .footer { background-color: #343a40; color: white; padding: 20px; text-align: center; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚫 Delivery Status Notification (Failure)</h1>
+        </div>
+        
+        <div class="content">
+            <div class="alert-box">
+                <h2>⚠️ User Unknown - Address Not Found</h2>
+                <p>The email address you tried to reach does not exist or has been deactivated.</p>
+            </div>
+            
+            <p><strong>Delivery to the following recipient failed permanently:</strong></p>
+            
+            <div class="recipient-info">
+                <p><strong>📧 Failed Address:</strong> nonexistent.user@company-domain.com</p>
+                <p><strong>🔢 SMTP Error Code:</strong> <span class="code">550 5.1.1</span></p>
+                <p><strong>📋 Server Response:</strong> User unknown in virtual mailbox table</p>
+                <p><strong>⏰ Timestamp:</strong> Mon, 5 Jan 2026 11:15:22 +0000</p>
+            </div>
+            
+            <h3>Possible Reasons:</h3>
+            <ul>
+                <li>The email address is misspelled or incorrect</li>
+                <li>The user account has been deleted or suspended</li>
+                <li>The domain exists but the specific mailbox does not</li>
+            </ul>
+            
+            <h3>Recommended Actions:</h3>
+            <ol>
+                <li>Verify the recipient's email address is correct</li>
+                <li>Contact the recipient through alternative communication channels</li>
+                <li>Check if the organization has updated their email system</li>
+            </ol>
+            
+            <p style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #dee2e6;">
+                <strong>Original Message Subject:</strong> Quarterly Report - Q4 2025<br>
+                <strong>Your Message-ID:</strong> &lt;report-q4-2025@yourdomain.com&gt;
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Automated Mail Delivery System</strong></p>
+            <p>mailserver.net | This is an automatic notification - Please do not reply</p>
+        </div>
+    </div>
+</body>
+</html>
+
+--boundary456
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; mailserver.net
+Arrival-Date: Mon, 5 Jan 2026 11:10:15 +0000
+
+Final-Recipient: rfc822; nonexistent.user@company-domain.com
+Action: failed
+Status: 5.1.1
+Diagnostic-Code: smtp; 550 5.1.1 User unknown in virtual mailbox table
+
+--boundary456--

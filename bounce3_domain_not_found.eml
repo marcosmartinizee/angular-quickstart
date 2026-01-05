@@ -1,0 +1,112 @@
+From: Mail Delivery System <noreply@smtp-relay.com>
+To: sender@yourdomain.com
+Subject: Delivery Status Notification (Failure)
+Date: Mon, 5 Jan 2026 12:45:10 +0000
+Message-ID: <20260105124510.abcde@smtp-relay.com>
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status; boundary="boundary789"
+
+--boundary789
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mail Delivery Failed</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background-color: #e8eaf6; padding: 20px; }
+        .email-wrapper { max-width: 700px; margin: 0 auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .banner { background: linear-gradient(90deg, #ff6b6b 0%, #ee5a6f 100%); padding: 40px 30px; color: white; }
+        .banner h1 { font-size: 26px; margin-bottom: 10px; }
+        .banner p { font-size: 16px; opacity: 0.95; }
+        .body-content { padding: 35px 30px; }
+        .error-badge { display: inline-block; background-color: #ff6b6b; color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-bottom: 20px; }
+        .info-card { background-color: #f5f5f5; border-left: 5px solid #ff6b6b; padding: 20px; margin: 20px 0; border-radius: 5px; }
+        .info-card p { margin: 8px 0; color: #424242; }
+        .info-card strong { color: #212121; }
+        .technical-details { background-color: #263238; color: #aed581; padding: 20px; border-radius: 8px; margin: 25px 0; font-family: 'Courier New', monospace; font-size: 13px; overflow-x: auto; }
+        .action-list { background-color: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .action-list h3 { color: #1565c0; margin-bottom: 15px; }
+        .action-list li { margin: 10px 0; color: #424242; line-height: 1.6; }
+        .footer-section { background-color: #37474f; color: #b0bec5; padding: 25px 30px; text-align: center; font-size: 13px; line-height: 1.8; }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <div class="banner">
+            <h1>🌐 Mail Delivery Failed</h1>
+            <p>Your message could not be delivered due to a domain resolution error</p>
+        </div>
+        
+        <div class="body-content">
+            <span class="error-badge">PERMANENT FAILURE</span>
+            
+            <h2 style="color: #212121; margin-bottom: 15px;">Domain Not Found</h2>
+            <p style="color: #616161; line-height: 1.7; margin-bottom: 20px;">
+                The email system was unable to locate the recipient's mail server. The domain name does not exist or is not configured to receive email.
+            </p>
+            
+            <div class="info-card">
+                <p><strong>📧 Recipient Address:</strong> contact@nonexistent-domain-xyz.com</p>
+                <p><strong>🔍 Error Type:</strong> DNS Resolution Failure</p>
+                <p><strong>📊 Status Code:</strong> 5.4.4</p>
+                <p><strong>⏱️ Failed At:</strong> Mon, 5 Jan 2026 12:45:10 +0000</p>
+                <p><strong>🔄 Retry Attempts:</strong> 3 (all failed)</p>
+            </div>
+            
+            <div class="technical-details">
+                <strong>Technical Diagnostic Information:</strong><br><br>
+                Host nonexistent-domain-xyz.com not found: 3(NXDOMAIN)<br>
+                DNS query failed: No MX records found<br>
+                SMTP Error: 550 5.4.4 Host lookup failed<br>
+                Final-Recipient: rfc822; contact@nonexistent-domain-xyz.com<br>
+                Action: failed<br>
+                Status: 5.4.4
+            </div>
+            
+            <div class="action-list">
+                <h3>🛠️ What You Can Do:</h3>
+                <ul>
+                    <li><strong>Verify the domain name:</strong> Check for typos in the email address (e.g., .com vs .net)</li>
+                    <li><strong>Confirm domain status:</strong> The domain may have expired or been deleted</li>
+                    <li><strong>Contact recipient:</strong> Use alternative methods to obtain the correct email address</li>
+                    <li><strong>Check DNS records:</strong> If you manage the domain, verify MX records are properly configured</li>
+                </ul>
+            </div>
+            
+            <p style="margin-top: 25px; padding: 15px; background-color: #fff9c4; border-radius: 5px; color: #f57f17;">
+                <strong>⚠️ Note:</strong> This is a permanent error. The message will not be retried automatically.
+            </p>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
+                <p style="color: #757575; font-size: 14px;"><strong>Original Message Information:</strong></p>
+                <p style="color: #757575; font-size: 14px;">Subject: Partnership Proposal - January 2026</p>
+                <p style="color: #757575; font-size: 14px;">Message-ID: &lt;partnership-jan2026@yourdomain.com&gt;</p>
+            </div>
+        </div>
+        
+        <div class="footer-section">
+            <p><strong>SMTP Relay Service</strong></p>
+            <p>smtp-relay.com | Automated Delivery Status Notification</p>
+            <p>This is a system-generated message. Please do not reply to this email.</p>
+        </div>
+    </div>
+</body>
+</html>
+
+--boundary789
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; smtp-relay.com
+Arrival-Date: Mon, 5 Jan 2026 12:40:05 +0000
+
+Final-Recipient: rfc822; contact@nonexistent-domain-xyz.com
+Action: failed
+Status: 5.4.4
+Diagnostic-Code: smtp; 550 5.4.4 Host lookup failed: nonexistent-domain-xyz.com
+
+--boundary789--
