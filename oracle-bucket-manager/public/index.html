@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle Cloud Bucket Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🗄️ Oracle Cloud Bucket Manager</h1>
+            <p class="subtitle">Gestión de Buckets con Subdominios</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Create Section -->
+            <section class="card">
+                <h2>✨ Crear Buckets</h2>
+
+                <div class="form-section">
+                    <h3>Crear Bucket Individual</h3>
+                    <form id="createSingleForm">
+                        <div class="form-group">
+                            <label for="singleBucketName">Nombre del Bucket:</label>
+                            <input type="text" id="singleBucketName" required placeholder="mi-bucket">
+                        </div>
+                        <div class="form-group">
+                            <label for="singleSubdomain">Subdominio (opcional):</label>
+                            <input type="text" id="singleSubdomain" placeholder="app1">
+                            <small>Si se especifica, el bucket se llamará: subdominio-nombre</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="singlePublicAccess">Acceso Público:</label>
+                            <select id="singlePublicAccess">
+                                <option value="NoPublicAccess">Sin Acceso Público</option>
+                                <option value="ObjectRead">Lectura de Objetos</option>
+                                <option value="ObjectReadWithoutList">Lectura sin Listar</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="singleStorageTier">Nivel de Almacenamiento:</label>
+                            <select id="singleStorageTier">
+                                <option value="Standard">Standard</option>
+                                <option value="Archive">Archive</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Crear Bucket</button>
+                    </form>
+                </div>
+
+                <div class="form-section">
+                    <h3>Crear Múltiples Buckets con Subdominios</h3>
+                    <form id="createMultipleForm">
+                        <div class="form-group">
+                            <label for="multiBaseName">Nombre Base:</label>
+                            <input type="text" id="multiBaseName" required placeholder="storage">
+                        </div>
+                        <div class="form-group">
+                            <label for="multiSubdomains">Subdominios (uno por línea):</label>
+                            <textarea id="multiSubdomains" rows="5" required placeholder="app1&#10;app2&#10;api&#10;cdn&#10;backup"></textarea>
+                            <small>Los buckets se crearán como: app1-storage, app2-storage, etc.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="multiPublicAccess">Acceso Público:</label>
+                            <select id="multiPublicAccess">
+                                <option value="NoPublicAccess">Sin Acceso Público</option>
+                                <option value="ObjectRead">Lectura de Objetos</option>
+                                <option value="ObjectReadWithoutList">Lectura sin Listar</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="multiStorageTier">Nivel de Almacenamiento:</label>
+                            <select id="multiStorageTier">
+                                <option value="Standard">Standard</option>
+                                <option value="Archive">Archive</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success">Crear Múltiples Buckets</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- List Section -->
+            <section class="card">
+                <h2>📋 Buckets Existentes</h2>
+                <div class="toolbar">
+                    <button id="refreshBtn" class="btn btn-secondary">🔄 Refrescar Lista</button>
+                    <button id="deleteSelectedBtn" class="btn btn-danger">🗑️ Eliminar Seleccionados</button>
+                </div>
+                <div id="bucketsContainer" class="buckets-list">
+                    <p class="loading">Cargando buckets...</p>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="card">
+                <h2>📊 Resultados</h2>
+                <div id="resultsContainer" class="results-container">
+                    <p class="empty-state">Los resultados de las operaciones aparecerán aquí</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
