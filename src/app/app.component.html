@@ -1,26 +1,286 @@
-<div class="header">
-  <div class="logo">
-    <img src="https://res.cloudinary.com/dzkoxrsdj/image/upload/v1646339469/angular_wzrs5o.png">
+<div class="container">
+  <header class="header">
+    <h1>OCI Bucket Manager</h1>
+    <p class="subtitle">Gestiona tus buckets de Oracle Cloud Infrastructure</p>
+  </header>
+
+  <!-- Mensaje de notificación -->
+  <div *ngIf="message" class="message" [ngClass]="messageType">
+    {{ message }}
+  </div>
+
+  <!-- Loader -->
+  <div *ngIf="loading" class="loader">
+    <div class="spinner"></div>
+    <p>Cargando...</p>
+  </div>
+
+  <!-- Vista de Configuración -->
+  <div *ngIf="currentView === 'config'" class="config-view">
+    <div class="card">
+      <h2>Configuración de OCI</h2>
+      <p>Ingresa tus credenciales de Oracle Cloud Infrastructure para comenzar.</p>
+
+      <form (ngSubmit)="saveConfig()" class="config-form">
+        <div class="form-group">
+          <label for="tenancy">Tenancy OCID</label>
+          <input
+            type="text"
+            id="tenancy"
+            [(ngModel)]="ociConfig.tenancy"
+            name="tenancy"
+            placeholder="ocid1.tenancy.oc1..example"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="user">User OCID</label>
+          <input
+            type="text"
+            id="user"
+            [(ngModel)]="ociConfig.user"
+            name="user"
+            placeholder="ocid1.user.oc1..example"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="fingerprint">API Key Fingerprint</label>
+          <input
+            type="text"
+            id="fingerprint"
+            [(ngModel)]="ociConfig.fingerprint"
+            name="fingerprint"
+            placeholder="xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="region">Region</label>
+          <input
+            type="text"
+            id="region"
+            [(ngModel)]="ociConfig.region"
+            name="region"
+            placeholder="us-ashburn-1"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="compartmentId">Compartment ID</label>
+          <input
+            type="text"
+            id="compartmentId"
+            [(ngModel)]="ociConfig.compartmentId"
+            name="compartmentId"
+            placeholder="ocid1.compartment.oc1..example"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="privateKey">Private Key (PEM)</label>
+          <textarea
+            id="privateKey"
+            [(ngModel)]="ociConfig.privateKey"
+            name="privateKey"
+            rows="8"
+            placeholder="-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEA...
+-----END RSA PRIVATE KEY-----"
+            required></textarea>
+          <small>Pega tu clave privada completa incluyendo las líneas BEGIN y END</small>
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="loading">
+          Guardar Configuración
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Vista de Buckets -->
+  <div *ngIf="currentView === 'buckets'" class="buckets-view">
+    <div class="actions-bar">
+      <div class="actions-left">
+        <button class="btn btn-primary" (click)="openCreateForm()">
+          + Crear Bucket
+        </button>
+        <button class="btn btn-secondary" (click)="openBulkCreateForm()">
+          + Crear Múltiples
+        </button>
+        <button class="btn btn-refresh" (click)="loadBuckets()">
+          ⟳ Actualizar
+        </button>
+      </div>
+      <div class="actions-right">
+        <button
+          class="btn btn-danger"
+          (click)="deleteSelected()"
+          [disabled]="selectedBuckets.size === 0">
+          Eliminar Seleccionados ({{ selectedBuckets.size }})
+        </button>
+        <button class="btn btn-config" (click)="goToConfig()">
+          ⚙ Configuración
+        </button>
+      </div>
+    </div>
+
+    <!-- Formulario de crear bucket individual -->
+    <div *ngIf="showCreateForm" class="card form-card">
+      <h3>Crear Nuevo Bucket</h3>
+      <form (ngSubmit)="createBucket()" class="bucket-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="bucketName">Nombre del Bucket</label>
+            <input
+              type="text"
+              id="bucketName"
+              [(ngModel)]="newBucket.bucketName"
+              name="bucketName"
+              placeholder="my-bucket"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="subdomain">Subdominio (opcional)</label>
+            <input
+              type="text"
+              id="subdomain"
+              [(ngModel)]="newBucket.subdomain"
+              name="subdomain"
+              placeholder="subdomain.example.com">
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                [(ngModel)]="newBucket.publicAccess"
+                name="publicAccess">
+              Acceso Público
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Crear</button>
+          <button type="button" class="btn btn-secondary" (click)="cancelCreate()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Formulario de crear múltiples buckets -->
+    <div *ngIf="showBulkCreateForm" class="card form-card">
+      <h3>Crear Múltiples Buckets</h3>
+
+      <div class="form-group">
+        <label for="bulkCount">Cantidad de buckets:</label>
+        <input
+          type="number"
+          id="bulkCount"
+          [(ngModel)]="bulkBucketCount"
+          (ngModelChange)="generateBulkBuckets()"
+          min="1"
+          max="50"
+          class="bulk-count">
+      </div>
+
+      <form (ngSubmit)="createBucketsBulk()" class="bulk-form">
+        <div *ngFor="let bucket of bulkBuckets; let i = index; trackBy: trackByIndex" class="bulk-item">
+          <div class="bulk-item-number">{{ i + 1 }}</div>
+          <div class="form-row">
+            <div class="form-group">
+              <input
+                type="text"
+                [(ngModel)]="bucket.bucketName"
+                [name]="'bulkBucketName' + i"
+                placeholder="Nombre del bucket"
+                required>
+            </div>
+
+            <div class="form-group">
+              <input
+                type="text"
+                [(ngModel)]="bucket.subdomain"
+                [name]="'bulkSubdomain' + i"
+                placeholder="Subdominio (opcional)">
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label>
+                <input
+                  type="checkbox"
+                  [(ngModel)]="bucket.publicAccess"
+                  [name]="'bulkPublicAccess' + i">
+                Público
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Crear Todos</button>
+          <button type="button" class="btn btn-secondary" (click)="cancelCreate()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Lista de buckets -->
+    <div class="card">
+      <div class="buckets-header">
+        <h2>Buckets ({{ buckets.length }})</h2>
+        <button class="btn btn-small" (click)="selectAll()">
+          {{ selectedBuckets.size === buckets.length ? 'Deseleccionar Todos' : 'Seleccionar Todos' }}
+        </button>
+      </div>
+
+      <div *ngIf="buckets.length === 0" class="empty-state">
+        <p>No hay buckets creados. Crea tu primer bucket usando el botón "+ Crear Bucket"</p>
+      </div>
+
+      <table *ngIf="buckets.length > 0" class="buckets-table">
+        <thead>
+          <tr>
+            <th width="50">
+              <input
+                type="checkbox"
+                [checked]="selectedBuckets.size === buckets.length && buckets.length > 0"
+                (change)="selectAll()">
+            </th>
+            <th>Nombre</th>
+            <th>Creado</th>
+            <th>Acceso</th>
+            <th width="120">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let bucket of buckets" [class.selected]="isSelected(bucket.name)">
+            <td>
+              <input
+                type="checkbox"
+                [checked]="isSelected(bucket.name)"
+                (change)="toggleBucketSelection(bucket.name)">
+            </td>
+            <td>
+              <strong>{{ bucket.name }}</strong>
+              <div *ngIf="bucket.metadata?.subdomain" class="subdomain">
+                {{ bucket.metadata.subdomain }}
+              </div>
+            </td>
+            <td>{{ bucket.timeCreated | date:'short' }}</td>
+            <td>
+              <span class="badge" [ngClass]="bucket.publicAccessType === 'ObjectRead' ? 'badge-public' : 'badge-private'">
+                {{ bucket.publicAccessType === 'ObjectRead' ? 'Público' : 'Privado' }}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-danger btn-small" (click)="deleteBucket(bucket.name)">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
-<div class="resource-list">
-  <h2>
-      Here are some resources to help you on your Angular + Netlify journey:
-  </h2>
-  <ul>
-    <li>
-      <a href="https://github.com/netlify-templates/angular-quickstart">The Angular Quickstart repo</a>
-    </li>
-    <li>
-      <a href="https://www.netlify.com/tags/angular/">Netlify Blog: Angular posts</a>
-    <li>
-      <a href="https://docs.netlify.com/">Netlify Docs</a>
-    </li>
-    <li>
-      <a href="https://angular.io/">Angular Docs</a>
-    </li>
-  </ul>
-</div>
-<footer class="footer">
-  Made with <a href="https://netlify.com"><img src="https://res.cloudinary.com/dzkoxrsdj/image/upload/v1646714899/netliheart_ezlkim.svg" alt="Netlify Logo" /></a> for you!
-</footer>
