@@ -1,0 +1,129 @@
+<div class="bucket-manager-container">
+  <div class="header">
+    <h1>Oracle Cloud Bucket Manager</h1>
+    <p class="subtitle">Create, manage, and delete Oracle Cloud Storage buckets with custom subdomains</p>
+  </div>
+
+  <!-- Message Alert -->
+  <div *ngIf="message" class="alert" [ngClass]="{'alert-success': messageType === 'success', 'alert-error': messageType === 'error'}">
+    {{ message }}
+  </div>
+
+  <!-- Create Buckets Section -->
+  <div class="card">
+    <h2>Create New Buckets</h2>
+    <form [formGroup]="bucketForm" (ngSubmit)="createBuckets()">
+      <div formArrayName="buckets">
+        <div *ngFor="let bucket of bucketsFormArray.controls; let i = index" class="bucket-form-group" [formGroupName]="i">
+          <div class="form-row">
+            <div class="form-field">
+              <label [attr.for]="'bucketName-' + i">Bucket Name *</label>
+              <input 
+                [id]="'bucketName-' + i"
+                type="text" 
+                formControlName="bucketName" 
+                placeholder="my-bucket-name"
+                [class.invalid]="bucket.get('bucketName')?.invalid && bucket.get('bucketName')?.touched">
+              <small *ngIf="bucket.get('bucketName')?.invalid && bucket.get('bucketName')?.touched" class="error-text">
+                Valid bucket name required (alphanumeric, hyphens, underscores)
+              </small>
+            </div>
+
+            <div class="form-field">
+              <label [attr.for]="'subdomain-' + i">Subdomain *</label>
+              <input 
+                [id]="'subdomain-' + i"
+                type="text" 
+                formControlName="subdomain" 
+                placeholder="my-subdomain"
+                [class.invalid]="bucket.get('subdomain')?.invalid && bucket.get('subdomain')?.touched">
+              <small *ngIf="bucket.get('subdomain')?.invalid && bucket.get('subdomain')?.touched" class="error-text">
+                Valid subdomain required (alphanumeric and hyphens)
+              </small>
+            </div>
+
+            <div class="form-field checkbox-field">
+              <label>
+                <input type="checkbox" formControlName="publicAccess">
+                Public Access
+              </label>
+            </div>
+
+            <div class="form-actions">
+              <button 
+                type="button" 
+                class="btn btn-danger btn-small" 
+                (click)="removeBucketField(i)"
+                [disabled]="bucketsFormArray.length === 1">
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-buttons">
+        <button type="button" class="btn btn-secondary" (click)="addBucketField()">
+          + Add Another Bucket
+        </button>
+        <button type="button" class="btn btn-outline" (click)="clearForm()">
+          Clear Form
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading || bucketForm.invalid">
+          <span *ngIf="!loading">Create Bucket(s)</span>
+          <span *ngIf="loading">Creating...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Existing Buckets Section -->
+  <div class="card">
+    <div class="card-header">
+      <h2>Existing Buckets</h2>
+      <button class="btn btn-secondary btn-small" (click)="loadBuckets()" [disabled]="loading">
+        <span *ngIf="!loading">Refresh</span>
+        <span *ngIf="loading">Loading...</span>
+      </button>
+    </div>
+
+    <div *ngIf="loading" class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Loading buckets...</p>
+    </div>
+
+    <div *ngIf="!loading && buckets.length === 0" class="empty-state">
+      <p>No buckets found. Create your first bucket above!</p>
+    </div>
+
+    <div *ngIf="!loading && buckets.length > 0" class="table-container">
+      <table class="buckets-table">
+        <thead>
+          <tr>
+            <th>Bucket Name</th>
+            <th>Subdomain</th>
+            <th>Created Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let bucket of buckets">
+            <td>{{ bucket.name }}</td>
+            <td>
+              <span class="subdomain-badge">{{ bucket.subdomain }}</span>
+            </td>
+            <td>{{ bucket.createdDate ? (bucket.createdDate | date:'medium') : 'N/A' }}</td>
+            <td>
+              <button 
+                class="btn btn-danger btn-small" 
+                (click)="deleteBucket(bucket.name)"
+                [disabled]="loading">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

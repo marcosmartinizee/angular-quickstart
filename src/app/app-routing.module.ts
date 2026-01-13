@@ -1,7 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { BucketManagerComponent } from './components/bucket-manager/bucket-manager.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  { path: '', component: BucketManagerComponent },
+  { path: 'buckets', component: BucketManagerComponent },
+  { path: '**', redirectTo: '' }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
