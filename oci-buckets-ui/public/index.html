@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OCI Buckets UI</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --panel: #101a33;
+        --text: #e9eefc;
+        --muted: #9fb0df;
+        --accent: #5aa3ff;
+        --danger: #ff5a7a;
+        --ok: #42d392;
+        --border: rgba(255, 255, 255, 0.12);
+      }
+
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      header {
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(16, 26, 51, 0.9), rgba(16, 26, 51, 0.6));
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      header p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      main {
+        padding: 20px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      @media (min-width: 980px) {
+        .grid {
+          grid-template-columns: 1.1fr 0.9fr;
+        }
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+      }
+
+      .row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      label {
+        font-size: 12px;
+        color: var(--muted);
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      input, select, textarea {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 14px;
+        outline: none;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 160px;
+        resize: vertical;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 12px;
+        line-height: 1.4;
+      }
+
+      button {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: rgba(90, 163, 255, 0.18);
+        color: var(--text);
+        padding: 10px 12px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      button.primary {
+        background: rgba(90, 163, 255, 0.35);
+        border-color: rgba(90, 163, 255, 0.7);
+      }
+
+      button.danger {
+        background: rgba(255, 90, 122, 0.2);
+        border-color: rgba(255, 90, 122, 0.65);
+      }
+
+      button:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .status {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 8px;
+        white-space: pre-wrap;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      }
+
+      .ok {
+        color: var(--ok);
+      }
+      .err {
+        color: var(--danger);
+      }
+
+      .hint {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.4;
+        margin: 8px 0 0;
+      }
+
+      .pill {
+        display: inline-block;
+        border: 1px solid var(--border);
+        padding: 3px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>OCI Buckets UI</h1>
+      <p>Crear / listar / eliminar buckets en Oracle Cloud (Object Storage).</p>
+    </header>
+    <main>
+      <div class="grid">
+        <section class="card">
+          <div class="row" style="justify-content: space-between">
+            <div>
+              <div class="pill" id="namespacePill">Namespace: (cargando...)</div>
+            </div>
+            <div class="row">
+              <button id="refreshBtn">Refrescar lista</button>
+            </div>
+          </div>
+          <p class="hint">
+            Pega aquí los nombres de buckets (uno por línea) o usa el generador.
+          </p>
+          <div style="margin-top: 12px">
+            <textarea id="names"></textarea>
+          </div>
+
+          <div class="row" style="margin-top: 12px">
+            <div style="min-width: 220px">
+              <label>Prefijo (subdominio)</label>
+              <input id="prefix" value="bucket" placeholder="ej: miapp" />
+            </div>
+            <div style="min-width: 140px">
+              <label>Cantidad</label>
+              <input id="count" type="number" value="5" min="1" max="500" />
+            </div>
+            <div style="min-width: 180px">
+              <label>Separador</label>
+              <input id="separator" value="-" />
+            </div>
+            <div style="align-self: end">
+              <button class="primary" id="generateBtn">Generar nombres</button>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top: 12px">
+            <div style="min-width: 260px">
+              <label>Public Access</label>
+              <select id="publicAccess">
+                <option value="NoPublicAccess">NoPublicAccess</option>
+                <option value="ObjectRead">ObjectRead</option>
+                <option value="ObjectReadWithoutList">ObjectReadWithoutList</option>
+              </select>
+            </div>
+            <div style="min-width: 200px">
+              <label>Storage Tier</label>
+              <select id="storageTier">
+                <option value="Standard">Standard</option>
+                <option value="Archive">Archive</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top: 14px">
+            <button class="primary" id="createBtn">Crear buckets</button>
+            <button class="danger" id="deleteBtn">Eliminar buckets</button>
+            <label style="display: flex; align-items: center; gap: 8px; margin: 0 0 0 6px">
+              <input id="force" type="checkbox" />
+              <span style="font-size: 12px; color: var(--muted)">Force (continuar aunque falle)</span>
+            </label>
+          </div>
+
+          <div id="actionStatus" class="status"></div>
+        </section>
+
+        <section class="card">
+          <div class="row" style="justify-content: space-between">
+            <h2 style="margin: 0; font-size: 16px">Buckets en el compartment</h2>
+          </div>
+          <p class="hint">Click para copiar un nombre al textarea.</p>
+          <div id="bucketList" class="status" style="margin-top: 10px"></div>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      const namespacePill = document.getElementById("namespacePill");
+      const namesEl = document.getElementById("names");
+      const prefixEl = document.getElementById("prefix");
+      const countEl = document.getElementById("count");
+      const separatorEl = document.getElementById("separator");
+      const publicAccessEl = document.getElementById("publicAccess");
+      const storageTierEl = document.getElementById("storageTier");
+      const forceEl = document.getElementById("force");
+      const bucketListEl = document.getElementById("bucketList");
+      const actionStatusEl = document.getElementById("actionStatus");
+
+      const refreshBtn = document.getElementById("refreshBtn");
+      const generateBtn = document.getElementById("generateBtn");
+      const createBtn = document.getElementById("createBtn");
+      const deleteBtn = document.getElementById("deleteBtn");
+
+      function setBusy(busy) {
+        for (const btn of [refreshBtn, generateBtn, createBtn, deleteBtn]) {
+          btn.disabled = busy;
+        }
+      }
+
+      function parseNames(text) {
+        return String(text || "")
+          .split(/\r?\n/)
+          .map((s) => s.trim())
+          .filter(Boolean);
+      }
+
+      function renderResult(result) {
+        if (!result) return "";
+        const lines = [];
+        lines.push(`ok: ${result.ok}`);
+        if (result.created) lines.push(`created: ${result.created.length}`);
+        if (result.deleted) lines.push(`deleted: ${result.deleted.length}`);
+        if (result.results && result.results.length) {
+          lines.push("\nDetalles:");
+          for (const item of result.results) {
+            lines.push(`${item.ok ? "✅" : "❌"} ${item.name}${item.error ? " - " + item.error : ""}`);
+          }
+        }
+        return lines.join("\n");
+      }
+
+      async function api(path, body) {
+        const res = await fetch(path, {
+          method: body ? "POST" : "GET",
+          headers: body ? { "Content-Type": "application/json" } : undefined,
+          body: body ? JSON.stringify(body) : undefined
+        });
+        const json = await res.json().catch(() => null);
+        if (!res.ok) {
+          const msg = json && json.error && json.error.message ? json.error.message : `HTTP ${res.status}`;
+          throw new Error(msg);
+        }
+        return json;
+      }
+
+      async function loadNamespace() {
+        try {
+          const data = await api("/api/namespace");
+          namespacePill.textContent = `Namespace: ${data.namespace}`;
+        } catch (e) {
+          namespacePill.textContent = `Namespace: error (${e.message})`;
+        }
+      }
+
+      async function loadBuckets() {
+        bucketListEl.textContent = "Cargando...";
+        try {
+          const data = await api("/api/buckets");
+          if (!data.buckets || !data.buckets.length) {
+            bucketListEl.textContent = "(sin buckets o sin permisos)";
+            return;
+          }
+          bucketListEl.innerHTML = "";
+          for (const b of data.buckets) {
+            const a = document.createElement("a");
+            a.href = "#";
+            a.textContent = b.name;
+            a.style.display = "inline-block";
+            a.style.margin = "0 8px 8px 0";
+            a.style.color = "var(--accent)";
+            a.onclick = (ev) => {
+              ev.preventDefault();
+              const names = new Set(parseNames(namesEl.value));
+              names.add(b.name);
+              namesEl.value = Array.from(names).join("\n");
+            };
+            bucketListEl.appendChild(a);
+          }
+        } catch (e) {
+          bucketListEl.textContent = `Error: ${e.message}`;
+        }
+      }
+
+      refreshBtn.onclick = async () => {
+        setBusy(true);
+        actionStatusEl.textContent = "";
+        try {
+          await loadBuckets();
+        } finally {
+          setBusy(false);
+        }
+      };
+
+      generateBtn.onclick = async () => {
+        setBusy(true);
+        actionStatusEl.textContent = "";
+        try {
+          const data = await api("/api/generate", {
+            subdomainPrefix: prefixEl.value,
+            count: Number(countEl.value),
+            separator: separatorEl.value
+          });
+          namesEl.value = data.names.join("\n");
+        } catch (e) {
+          actionStatusEl.textContent = e.message;
+          actionStatusEl.className = "status err";
+        } finally {
+          setBusy(false);
+        }
+      };
+
+      createBtn.onclick = async () => {
+        setBusy(true);
+        actionStatusEl.textContent = "Creando...";
+        actionStatusEl.className = "status";
+        try {
+          const names = parseNames(namesEl.value);
+          const result = await api("/api/buckets:create", {
+            names,
+            publicAccessType: publicAccessEl.value,
+            storageTier: storageTierEl.value
+          });
+          actionStatusEl.textContent = renderResult(result);
+          actionStatusEl.className = "status " + (result.ok ? "ok" : "err");
+          await loadBuckets();
+        } catch (e) {
+          actionStatusEl.textContent = e.message;
+          actionStatusEl.className = "status err";
+        } finally {
+          setBusy(false);
+        }
+      };
+
+      deleteBtn.onclick = async () => {
+        setBusy(true);
+        actionStatusEl.textContent = "Eliminando...";
+        actionStatusEl.className = "status";
+        try {
+          const names = parseNames(namesEl.value);
+          const result = await api("/api/buckets:delete", {
+            names,
+            force: forceEl.checked
+          });
+          actionStatusEl.textContent = renderResult(result);
+          actionStatusEl.className = "status " + (result.ok ? "ok" : "err");
+          await loadBuckets();
+        } catch (e) {
+          actionStatusEl.textContent = e.message;
+          actionStatusEl.className = "status err";
+        } finally {
+          setBusy(false);
+        }
+      };
+
+      (async function init() {
+        setBusy(true);
+        await loadNamespace();
+        await loadBuckets();
+        setBusy(false);
+      })();
+    </script>
+  </body>
+</html>
+
