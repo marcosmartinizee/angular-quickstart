@@ -1,0 +1,115 @@
+<section class="panel">
+  <h2>Conexión OCI</h2>
+
+  <div class="grid">
+    <label>
+      Región (ej: us-ashburn-1)
+      <input [(ngModel)]="region" placeholder="Opcional si usas OCI_REGION" />
+    </label>
+
+    <label>
+      Compartment OCID
+      <input [(ngModel)]="compartmentId" placeholder="ocid1.compartment.oc1..xxxxx" />
+    </label>
+
+    <label>
+      Namespace
+      <input [(ngModel)]="namespace" placeholder="Opcional (puedes leerlo con el botón)" />
+    </label>
+
+    <div class="buttons">
+      <button (click)="onGetNamespace()" [disabled]="status==='loading'">Leer namespace</button>
+      <button (click)="onListBuckets()" [disabled]="status==='loading'">Listar buckets</button>
+    </div>
+  </div>
+
+  <div class="status" [class.loading]="status==='loading'" [class.error]="status==='error'" [class.success]="status==='success'">
+    {{ message }}
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Generación en lote</h2>
+
+  <p class="hint">
+    Puedes usar <code>{subdomain}</code> en el template. Si llenas “Bucket names”, se usa esa lista directamente.
+  </p>
+
+  <div class="grid">
+    <label>
+      Template de nombre
+      <input [(ngModel)]="template" placeholder="{subdomain}" />
+    </label>
+
+    <label>
+      Public access type (opcional)
+      <input [(ngModel)]="publicAccessType" placeholder="NoPublicAccess | ObjectRead | ..." />
+    </label>
+
+    <label>
+      Storage tier (opcional)
+      <input [(ngModel)]="storageTier" placeholder="Standard | Archive" />
+    </label>
+
+    <div class="buttons">
+      <button (click)="onBatchCreate()" [disabled]="status==='loading'">Crear buckets</button>
+      <button class="danger" (click)="onBatchDelete()" [disabled]="status==='loading'">Eliminar buckets</button>
+    </div>
+  </div>
+
+  <div class="grid two">
+    <label>
+      Subdominios (uno por línea)
+      <textarea [(ngModel)]="subdomainsText" rows="8" placeholder="app\nblog\nstatic"></textarea>
+    </label>
+    <label>
+      Bucket names (uno por línea)
+      <textarea [(ngModel)]="bucketNamesText" rows="8" placeholder="bucket-1\nbucket-2"></textarea>
+    </label>
+  </div>
+</section>
+
+<section class="panel" *ngIf="listResponse">
+  <h2>Buckets actuales ({{ listResponse.buckets.length }})</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Creado</th>
+        <th>Public access</th>
+        <th>Tier</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let b of listResponse.buckets">
+        <td><code>{{ b.name }}</code></td>
+        <td>{{ b.timeCreated || '-' }}</td>
+        <td>{{ b.publicAccessType || '-' }}</td>
+        <td>{{ b.storageTier || '-' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="panel" *ngIf="batchResponse">
+  <h2>Resultado batch ({{ batchResponse.results.length }})</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Bucket</th>
+        <th>Acción</th>
+        <th>OK</th>
+        <th>Error</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of batchResponse.results">
+        <td><code>{{ r.name }}</code></td>
+        <td>{{ r.action }}</td>
+        <td>{{ r.ok ? 'sí' : 'no' }}</td>
+        <td class="error-text">{{ r.error || '' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
