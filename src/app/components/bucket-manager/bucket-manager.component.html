@@ -1,0 +1,123 @@
+<div class="bucket-manager-container">
+  <div class="header">
+    <h1>OCI Bucket Manager</h1>
+    <button class="btn btn-refresh" (click)="loadBuckets()" [disabled]="loading || !isInitialized">
+      <span *ngIf="!loading">↻ Refresh</span>
+      <span *ngIf="loading">Loading...</span>
+    </button>
+  </div>
+
+  <div class="alert alert-warning" *ngIf="!isInitialized">
+    <strong>⚠ Not Connected</strong><br>
+    Please configure your OCI credentials in the Configuration tab first.
+  </div>
+
+  <div class="alert" *ngIf="message" [class.success]="messageType === 'success'" [class.error]="messageType === 'error'">
+    {{ message }}
+  </div>
+
+  <!-- Create Bucket Form -->
+  <div class="create-bucket-section" *ngIf="isInitialized">
+    <h2>Create New Bucket</h2>
+    <form (ngSubmit)="createBucket()" #createForm="ngForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="bucketName">Bucket Name *</label>
+          <input
+            type="text"
+            id="bucketName"
+            name="bucketName"
+            [(ngModel)]="newBucketName"
+            required
+            placeholder="my-bucket-name"
+            class="form-control"
+            [disabled]="creating"
+          />
+        </div>
+        <div class="form-group">
+          <label for="subdomain">Subdomain (Optional)</label>
+          <input
+            type="text"
+            id="subdomain"
+            name="subdomain"
+            [(ngModel)]="newBucketSubdomain"
+            placeholder="subdomain.example.com"
+            class="form-control"
+            [disabled]="creating"
+          />
+        </div>
+        <div class="form-group">
+          <label>&nbsp;</label>
+          <button type="submit" class="btn btn-primary" [disabled]="!createForm.form.valid || creating">
+            <span *ngIf="!creating">+ Create Bucket</span>
+            <span *ngIf="creating">Creating...</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Buckets List -->
+  <div class="buckets-section" *ngIf="isInitialized">
+    <h2>Existing Buckets ({{ buckets.length }})</h2>
+
+    <div class="loading-spinner" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Loading buckets...</p>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && buckets.length === 0">
+      <p>No buckets found. Create your first bucket above!</p>
+    </div>
+
+    <div class="buckets-grid" *ngIf="!loading && buckets.length > 0">
+      <div class="bucket-card" *ngFor="let bucket of buckets">
+        <div class="bucket-header">
+          <h3>{{ bucket.name }}</h3>
+          <button 
+            class="btn btn-delete" 
+            (click)="confirmDelete(bucket.name)"
+            [disabled]="deletingBucket !== null"
+          >
+            🗑 Delete
+          </button>
+        </div>
+        <div class="bucket-details">
+          <div class="detail-row">
+            <span class="label">Namespace:</span>
+            <span class="value">{{ bucket.namespace || 'N/A' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Subdomain:</span>
+            <span class="value">{{ getSubdomain(bucket) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Created:</span>
+            <span class="value">{{ formatDate(bucket.timeCreated) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Created By:</span>
+            <span class="value">{{ bucket.createdBy || 'N/A' }}</span>
+          </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div class="delete-modal" *ngIf="deletingBucket === bucket.name">
+          <div class="modal-content">
+            <h4>Confirm Deletion</h4>
+            <p>Are you sure you want to delete bucket <strong>{{ bucket.name }}</strong>?</p>
+            <p class="warning">⚠ This action cannot be undone!</p>
+            <div class="modal-buttons">
+              <button class="btn btn-danger" (click)="deleteBucket(bucket.name)">
+                Yes, Delete
+              </button>
+              <button class="btn btn-secondary" (click)="cancelDelete()">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

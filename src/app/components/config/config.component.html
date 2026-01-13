@@ -1,0 +1,115 @@
+<div class="config-container">
+  <div class="header">
+    <h1>Oracle Cloud Configuration</h1>
+    <div class="status-badge" [class.connected]="isInitialized" [class.disconnected]="!isInitialized">
+      {{ isInitialized ? '✓ Connected' : '○ Not Connected' }}
+    </div>
+  </div>
+
+  <div class="alert" *ngIf="message" [class.success]="messageType === 'success'" [class.error]="messageType === 'error'">
+    {{ message }}
+  </div>
+
+  <form (ngSubmit)="onSubmit()" #configForm="ngForm">
+    <div class="form-group">
+      <label for="tenancy">Tenancy OCID *</label>
+      <input
+        type="text"
+        id="tenancy"
+        name="tenancy"
+        [(ngModel)]="config.tenancy"
+        required
+        placeholder="ocid1.tenancy.oc1..aaaaaaaa..."
+        class="form-control"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="user">User OCID *</label>
+      <input
+        type="text"
+        id="user"
+        name="user"
+        [(ngModel)]="config.user"
+        required
+        placeholder="ocid1.user.oc1..aaaaaaaa..."
+        class="form-control"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="fingerprint">API Key Fingerprint *</label>
+      <input
+        type="text"
+        id="fingerprint"
+        name="fingerprint"
+        [(ngModel)]="config.fingerprint"
+        required
+        placeholder="aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99"
+        class="form-control"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="region">Region *</label>
+      <select
+        id="region"
+        name="region"
+        [(ngModel)]="config.region"
+        required
+        class="form-control"
+      >
+        <option *ngFor="let region of regions" [value]="region">{{ region }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="compartmentId">Compartment OCID *</label>
+      <input
+        type="text"
+        id="compartmentId"
+        name="compartmentId"
+        [(ngModel)]="config.compartmentId"
+        required
+        placeholder="ocid1.compartment.oc1..aaaaaaaa..."
+        class="form-control"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="privateKey">Private Key (PEM format) *</label>
+      <textarea
+        id="privateKey"
+        name="privateKey"
+        [(ngModel)]="config.privateKey"
+        required
+        rows="8"
+        placeholder="-----BEGIN RSA PRIVATE KEY-----&#10;MIIEpAIBAAKCAQEA...&#10;-----END RSA PRIVATE KEY-----"
+        class="form-control"
+      ></textarea>
+      <small class="form-text">Paste your entire private key including BEGIN and END lines</small>
+    </div>
+
+    <div class="button-group">
+      <button type="submit" class="btn btn-primary" [disabled]="!configForm.form.valid || loading">
+        <span *ngIf="loading">Connecting...</span>
+        <span *ngIf="!loading">{{ isInitialized ? 'Update Connection' : 'Connect to OCI' }}</span>
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="clearConfig()" [disabled]="loading">
+        Clear Configuration
+      </button>
+    </div>
+  </form>
+
+  <div class="help-section">
+    <h3>How to get your OCI credentials:</h3>
+    <ol>
+      <li>Log in to Oracle Cloud Console</li>
+      <li>Click on your profile icon → User Settings</li>
+      <li>Under "Resources", click "API Keys"</li>
+      <li>Click "Add API Key" and download the private key</li>
+      <li>Copy the configuration values shown after adding the key</li>
+      <li>Find your Compartment OCID in Identity → Compartments</li>
+    </ol>
+  </div>
+</div>

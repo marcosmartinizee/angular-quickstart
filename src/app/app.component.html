@@ -1,26 +1,19 @@
-<div class="header">
-  <div class="logo">
-    <img src="https://res.cloudinary.com/dzkoxrsdj/image/upload/v1646339469/angular_wzrs5o.png">
-  </div>
+<div class="app-container">
+  <nav class="navbar">
+    <div class="nav-brand">
+      <h1>☁️ OCI Bucket Manager</h1>
+    </div>
+    <div class="nav-links">
+      <a routerLink="/buckets" routerLinkActive="active">Buckets</a>
+      <a routerLink="/config" routerLinkActive="active">Configuration</a>
+    </div>
+  </nav>
+  
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+  
+  <footer class="footer">
+    <p>Oracle Cloud Infrastructure Bucket Management Tool</p>
+  </footer>
 </div>
-<div class="resource-list">
-  <h2>
-      Here are some resources to help you on your Angular + Netlify journey:
-  </h2>
-  <ul>
-    <li>
-      <a href="https://github.com/netlify-templates/angular-quickstart">The Angular Quickstart repo</a>
-    </li>
-    <li>
-      <a href="https://www.netlify.com/tags/angular/">Netlify Blog: Angular posts</a>
-    <li>
-      <a href="https://docs.netlify.com/">Netlify Docs</a>
-    </li>
-    <li>
-      <a href="https://angular.io/">Angular Docs</a>
-    </li>
-  </ul>
-</div>
-<footer class="footer">
-  Made with <a href="https://netlify.com"><img src="https://res.cloudinary.com/dzkoxrsdj/image/upload/v1646714899/netliheart_ezlkim.svg" alt="Netlify Logo" /></a> for you!
-</footer>
